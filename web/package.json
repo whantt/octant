@@ -11,8 +11,10 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prettier": "prettier --write \"src/{app,environments,assets}/**/*{.ts,.js,.json,.css,.scss}\"",
-    "electron:serve": "wait-on http-get://localhost:7777 && npm run electron:serve-tsc && electron . --serve",
-    "electron:serve-tsc": "tsc -p tsconfig-serve.json"
+    "electron:serve": "npm run electron:serve-tsc && electron . --serve",
+    "electron:serve-tsc": "tsc -p tsconfig-serve.json",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -22,8 +24,10 @@
     "singleQuote": true
   },
   "build": {
-    "appId": "com.vmware.tanzu.octant"
+    "appId": "com.vmware.tanzu.octant",
+    "extraFiles": ["./extraFiles/octant.exe"]
   },
+  "postInstall": "electron-builder install-app-deps",
   "private": true,
   "dependencies": {
     "@angular/animations": "^9.1.0",
@@ -53,6 +57,7 @@
     "dagre-d3": "^0.6.4",
     "decimal.js": "^10.2.0",
     "default-passive-events": "^1.0.10",
+    "electron-reload": "^1.5.0",
     "highlight.js": "^9.18.1",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
@@ -84,7 +89,7 @@
     "codelyzer": "^5.2.2",
     "dayjs": "^1.8.23",
     "electron": "^8.2.0",
-    "electron-builder": "^22.4.1",
+    "electron-builder": "^22.5.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.1",
     "karma": "^5.0.2",

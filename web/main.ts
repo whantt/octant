@@ -12,6 +12,15 @@ let win: BrowserWindow = null;
 const args = process.argv.slice(1);
 const serve = args.some(val => val === '--serve');
 
+var child = require('child_process').execFile
+var execPath = ".\\extraFiles\\octant.exe"
+var parameters = ["--disable-open-browser"];
+
+child(execPath, parameters, function(err, data) {
+     console.log(err)
+     console.log(data);
+});
+
 function createWindow(): BrowserWindow {
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -31,7 +40,7 @@ function createWindow(): BrowserWindow {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
     });
-    win.loadURL('http://localhost:7777/#/denali');
+    win.loadURL('http://localhost:7777/#');
   } else {
     win.loadURL(
       url.format({
