@@ -7,6 +7,7 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as electron from "electron";
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1);
@@ -20,6 +21,13 @@ child(execPath, parameters, function(err, data) {
      console.log(err)
      console.log(data);
 });
+
+const openUrl = (e, url) => {
+  if(url != win.webContents.getURL()) {
+    e.preventDefault();
+    electron.shell.openExternal(url);
+  }
+};
 
 function createWindow(): BrowserWindow {
   const electronScreen = screen;
@@ -62,6 +70,9 @@ function createWindow(): BrowserWindow {
     // when you should delete the corresponding element.
     win = null;
   });
+
+  win.webContents.on('will-navigate', openUrl);
+  win.webContents.on('new-window', openUrl);
 
   return win;
 }
