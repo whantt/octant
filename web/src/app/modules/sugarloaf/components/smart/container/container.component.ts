@@ -8,6 +8,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Navigation } from '../../../models/navigation';
 import { WebsocketService } from '../../../../shared/services/websocket/websocket.service';
 import { IconService } from '../../../../shared/services/icon/icon.service';
+import { ElectronService } from '../../../../shared/services/electron/electron.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,12 @@ export class ContainerComponent implements OnInit, OnDestroy {
   navigation: Navigation;
   style: object = {};
 
+  isElectron = false;
+
   constructor(
     private websocketService: WebsocketService,
-    private iconService: IconService
+    private iconService: IconService,
+    private electronService: ElectronService
   ) {
     iconService.load({
       iconName: 'octant-logo',
@@ -31,6 +35,7 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.websocketService.open();
+    this.isElectron = this.electronService.isElectron();
   }
 
   ngOnDestroy(): void {}

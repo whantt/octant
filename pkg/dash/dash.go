@@ -57,8 +57,8 @@ type Options struct {
 	UserAgent              string
 }
 
-// Run runs the dashboard.
-func Run(ctx context.Context, logger log.Logger, shutdownCh chan bool, options Options) error {
+// Run runs the dashboard. `startupCh` can be nil if no notification is required.
+func Run(ctx context.Context, logger log.Logger, shutdownCh, startupCh chan bool, options Options) error {
 	ctx = internalLog.WithLoggerContext(ctx, logger)
 
 	if options.Context != "" {
@@ -206,7 +206,7 @@ func Run(ctx context.Context, logger log.Logger, shutdownCh chan bool, options O
 	}
 
 	go func() {
-		if err := d.Run(ctx); err != nil {
+		if err := d.Run(ctx, startupCh); err != nil {
 			logger.Debugf("running dashboard service: %v", err)
 		}
 	}()
@@ -359,7 +359,7 @@ func newDash(listener net.Listener, namespace, uiURL string, browserPath string,
 	}, nil
 }
 
-func (d *dash) Run(ctx context.Context) error {
+func (d *dash) Run(ctx context.Context, startupCh chan bool) error {
 	hf := octant.NewHandlerFactory(
 		octant.BackendHandler(d.apiHandler.Handler),
 		octant.FrontendURL(viper.GetString("proxy-frontend")))
@@ -381,6 +381,10 @@ func (d *dash) Run(ctx context.Context) error {
 	dashboardURL := fmt.Sprintf("http://%s", d.listener.Addr())
 
 	d.logger.Infof("Dashboard is available at %s\n", dashboardURL)
+
+	if startupCh != nil {
+		startupCh <- true
+	}
 
 	if d.willOpenBrowser {
 		runURL := dashboardURL

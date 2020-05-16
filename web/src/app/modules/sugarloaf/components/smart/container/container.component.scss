@@ -4,6 +4,7 @@
 
 .main-container {
   // Navigation's color variables for Light Theme.
+
   :host-context(body) {
     --navigation-border-color: rgb(215, 215, 215);
     --navigation-background-color: #0079AD;
@@ -15,6 +16,12 @@
     --navigation-background-color: #304250;
   }
 
+  // Pad notifier and make it draggable in electron.
+  .notifier .isElectron {
+    -webkit-app-region: drag;
+    padding-left: 50px;
+  }
+
   .header-centered {
     margin: auto 0;
   }
@@ -23,6 +30,19 @@
     background: var(--navigation-background-color);
     flex-wrap: wrap;
     height: auto;
+
+    // Pad header and make it draggable in electron. 70px is a guess for macOS. Will need
+    // to be tested on Windows and in Linux.
+    &.isElectron {
+      -webkit-app-region: drag;
+      padding-left: 70px;
+
+      // hide logo when running in electron
+      .branding {
+        display: none;
+      }
+    }
+
 
     .header-nav {
       padding-left: 1rem;
