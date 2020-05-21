@@ -19,12 +19,9 @@ export class ContainerComponent implements OnInit, OnDestroy {
   navigation: Navigation;
   style: object = {};
 
-  isElectron = false;
-
   constructor(
     private websocketService: WebsocketService,
-    private iconService: IconService,
-    private electronService: ElectronService
+    private iconService: IconService
   ) {
     iconService.load({
       iconName: 'octant-logo',
@@ -35,7 +32,6 @@ export class ContainerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.websocketService.open();
-    this.isElectron = this.electronService.isElectron();
   }
 
   ngOnDestroy(): void {}

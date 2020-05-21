@@ -2,6 +2,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+@mixin electron-header {
+  -webkit-app-region: drag;
+  padding-left: var(--padding-left);
+}
+
 .main-container {
   // Navigation's color variables for Light Theme.
 
@@ -16,10 +21,23 @@
     --navigation-background-color: #304250;
   }
 
-  // Pad notifier and make it draggable in electron.
-  .notifier .isElectron {
-    -webkit-app-region: drag;
-    padding-left: 50px;
+  :host-context(body.platform-darwin) {
+    --padding-left: 70px;
+  }
+
+  :host-context(body.electron) {
+    .notifier {
+      @include electron-header;
+    }
+
+    .header {
+      @include electron-header;
+
+      .branding {
+        display: none;
+      }
+    }
+
   }
 
   .header-centered {
@@ -30,19 +48,6 @@
     background: var(--navigation-background-color);
     flex-wrap: wrap;
     height: auto;
-
-    // Pad header and make it draggable in electron. 70px is a guess for macOS. Will need
-    // to be tested on Windows and in Linux.
-    &.isElectron {
-      -webkit-app-region: drag;
-      padding-left: 70px;
-
-      // hide logo when running in electron
-      .branding {
-        display: none;
-      }
-    }
-
 
     .header-nav {
       padding-left: 1rem;
