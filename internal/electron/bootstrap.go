@@ -12,20 +12,29 @@ import (
 	"github.com/asticode/go-astilectron"
 )
 
-func initWindows(a *astilectron.Astilectron, appURL string, listener MessageListener, logger astikit.SeverityLogger) ([]*astilectron.Window, error) {
+func dimensionsWindowOptions(in astilectron.WindowOptions) astilectron.WindowOptions {
 	height := 750
 	width := 1200
 	windowMinWidth := 768
 	windowMinHeight := windowMinWidth * 10 / 16 // base min height off ultra wide ratio
 
-	window, err := a.NewWindow(appURL, &astilectron.WindowOptions{
-		Center:        astikit.BoolPtr(true),
-		Height:        astikit.IntPtr(height),
-		Width:         astikit.IntPtr(width),
-		MinWidth:      astikit.IntPtr(windowMinWidth),
-		MinHeight:     astikit.IntPtr(windowMinHeight),
-		TitleBarStyle: astikit.StrPtr("hiddenInset"),
-	})
+	in.Height = astikit.IntPtr(height)
+	in.Width = astikit.IntPtr(width)
+	in.MinWidth = astikit.IntPtr(windowMinWidth)
+	in.MinHeight = astikit.IntPtr(windowMinHeight)
+
+	return in
+}
+
+func initWindows(a *astilectron.Astilectron, appURL string, listener MessageListener, logger astikit.SeverityLogger) ([]*astilectron.Window, error) {
+	windowOptions := astilectron.WindowOptions{
+		Center: astikit.BoolPtr(true),
+	}
+
+	windowOptions = dimensionsWindowOptions(windowOptions)
+	windowOptions = platformWindowOptions(windowOptions)
+
+	window, err := a.NewWindow(appURL, &windowOptions)
 
 	if err != nil {
 		return nil, fmt.Errorf("create main window: %w", err)
