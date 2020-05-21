@@ -13,10 +13,8 @@ import (
 )
 
 func initWindows(a *astilectron.Astilectron, appURL string, listener MessageListener, logger astikit.SeverityLogger) ([]*astilectron.Window, error) {
-	size := a.PrimaryDisplay().Size()
-
-	height := int(float64(size.Height) * 0.65)
-	width := int(float64(size.Width) * 0.65)
+	height := 750
+	width := 1200
 	windowMinWidth := 768
 	windowMinHeight := windowMinWidth * 10 / 16 // base min height off ultra wide ratio
 
